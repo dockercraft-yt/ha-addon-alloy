@@ -1,4 +1,6 @@
 #!/bin/sh
+set -eu
+
 OPTS=/data/options.json
 USERCONF=/config
 RUNDIR=/tmp/alloy
@@ -34,25 +36,45 @@ else
 fi
 
 # Create the default config on first start
-[ -f "$USERCONF/config.alloy" ] || cp /default.alloy "$USERCONF/config.alloy"
+if [ ! -f "$USERCONF/config.alloy" ]; then
+  if ! cp /default.alloy "$USERCONF/config.alloy"; then
+    echo "ERROR: Failed to create the default Alloy config in $USERCONF" >&2
+    exit 1
+  fi
+fi
 
 # Runtime directory: user configs + generated loki.write block
-rm -rf "$RUNDIR" && mkdir -p "$RUNDIR"
-cp "$USERCONF"/*.alloy "$RUNDIR"/
+if ! rm -rf "$RUNDIR"; then
+  echo "ERROR: Failed to clear the Alloy runtime directory $RUNDIR" >&2
+  exit 1
+fi
+if ! mkdir -p "$RUNDIR"; then
+  echo "ERROR: Failed to create the Alloy runtime directory $RUNDIR" >&2
+  exit 1
+fi
+if ! cp "$USERCONF"/*.alloy "$RUNDIR"/; then
+  echo "ERROR: Failed to copy Alloy config files from $USERCONF to $RUNDIR" >&2
+  exit 1
+fi
 
-{
-  echo 'loki.write "default" {'
-  echo '  endpoint {'
-  echo '    url = sys.env("LOKI_URL")'
-  if [ "$USE_AUTH" = "true" ]; then
-    echo '    basic_auth {'
-    echo '      username = sys.env("LOKI_USER")'
-    echo '      password = sys.env("LOKI_PASSWORD")'
-    echo '    }'
-  fi
-  echo '  }'
-  echo '}'
-} > "$RUNDIR/loki-write.generated.alloy"
+AUTH_CONFIG=
+if [ "$USE_AUTH" = "true" ]; then
+  AUTH_CONFIG='    basic_auth {
+      username = sys.env("LOKI_USER")
+      password = sys.env("LOKI_PASSWORD")
+    }'
+fi
+
+if ! printf '%s\n' \
+  'loki.write "default" {' \
+  '  endpoint {' \
+  '    url = sys.env("LOKI_URL")' \
+  "$AUTH_CONFIG" \
+  '  }' \
+  '}' > "$RUNDIR/loki-write.generated.alloy"; then
+  echo "ERROR: Failed to write the generated Loki output config" >&2
+  exit 1
+fi
 
 exec /bin/alloy run \
   --server.http.listen-addr=0.0.0.0:12345 \

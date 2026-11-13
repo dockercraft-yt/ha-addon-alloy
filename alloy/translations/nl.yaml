@@ -1,0 +1,28 @@
+configuration:
+  loki_host:
+    name: Loki-host
+    description: >-
+      IP-adres of hostnaam van je Loki-instantie, zonder http:// en zonder
+      poort (bijvoorbeeld 192.0.2.10).
+  loki_port:
+    name: Loki-poort
+    description: Poort van je Loki-instantie (standaard 3100).
+  use_https:
+    name: HTTPS gebruiken
+    description: >-
+      Maak verbinding met Loki via HTTPS in plaats van HTTP. Hiervoor is een
+      reverseproxy met een vertrouwd certificaat vóór Loki vereist.
+  use_basic_auth:
+    name: Basic-authenticatie gebruiken
+    description: >-
+      Verstuur bij elk verzoek een gebruikersnaam en wachtwoord. Hiervoor is
+      een reverseproxy vóór Loki vereist, omdat Loki zelf geen
+      Basic-authenticatie ondersteunt.
+  loki_user:
+    name: Gebruikersnaam voor Basic-authenticatie
+    description: Alleen gebruikt als Basic-authenticatie is ingeschakeld.
+  loki_password:
+    name: Wachtwoord voor Basic-authenticatie
+    description: Alleen gebruikt als Basic-authenticatie is ingeschakeld.
+network:
+  12345/tcp: Alloy-webinterface

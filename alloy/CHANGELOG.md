@@ -1,6 +1,21 @@
 # Changelog
 
 All notable changes to this add-on are documented here.
+
+## 0.1.7
+
+### Added
+
+- Add-on configuration translations for French, Spanish, Italian, Dutch, Portuguese, Polish, Czech, Swedish, Norwegian Bokmål and Danish.
+
+### Changed
+
+- Fixed the README logo path so it renders correctly on GitHub.
+
+### Fixed
+
+- The startup script now stops with a clear error if it cannot read the options or prepare, copy or generate the Alloy configuration.
+
 ## 0.1.6
 
 - Fixed wrong settings on config.yaml from Basic Authentication as optional

@@ -1,0 +1,27 @@
+configuration:
+  loki_host:
+    name: Loki-vært
+    description: >-
+      IP-adresse eller værtsnavn på din Loki-instans, uden http:// og uden
+      port (for eksempel 192.0.2.10).
+  loki_port:
+    name: Loki-port
+    description: Porten til din Loki-instans (standard 3100).
+  use_https:
+    name: Brug HTTPS
+    description: >-
+      Opret forbindelse til Loki via HTTPS i stedet for HTTP. Kræver en
+      reverse proxy med et betroet certifikat foran Loki.
+  use_basic_auth:
+    name: Brug Basic-godkendelse
+    description: >-
+      Send et brugernavn og en adgangskode med hver anmodning. Kræver en
+      reverse proxy foran Loki, da Loki ikke understøtter Basic-godkendelse.
+  loki_user:
+    name: Brugernavn til Basic-godkendelse
+    description: Bruges kun, når Basic-godkendelse er aktiveret.
+  loki_password:
+    name: Adgangskode til Basic-godkendelse
+    description: Bruges kun, når Basic-godkendelse er aktiveret.
+network:
+  12345/tcp: Alloy-webgrænseflade
