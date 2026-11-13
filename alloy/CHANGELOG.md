@@ -1,6 +1,10 @@
 # Changelog
 
 All notable changes to this add-on are documented here.
+## 0.1.6
+
+- Fixed wrong settings on config.yaml from Basic Authentication as optional
+
 ## 0.1.5
 
 ### Changed
