@@ -6,6 +6,11 @@ All notable changes to this add-on are documented here.
 ### Added
 
 - Readable field names and descriptions in the add-on configuration (English and German translations).
+- Add-on icon (`icon.png`) and logo (`logo.png`).
+
+### Notes
+
+- The icon and logo were created with the help of AI (Claude by Anthropic) and are original designs, not copies of the Grafana or Home Assistant logos.
 
 ## 0.1.3
 

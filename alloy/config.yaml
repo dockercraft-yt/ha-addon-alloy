@@ -1,5 +1,5 @@
 name: Grafana Alloy
-version: "0.1.3"
+version: "0.1.4"
 slug: alloy
 description: Grafana Alloy collector that ships Home Assistant, Supervisor and add-on logs to Loki
 arch:
