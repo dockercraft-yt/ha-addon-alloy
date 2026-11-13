@@ -1,6 +1,12 @@
 # Changelog
 
 All notable changes to this add-on are documented here.
+## 0.1.5
+
+### Changed
+
+- Changed visibility for Basic Authentication to optional
+
 ## 0.1.4
 
 ### Added
