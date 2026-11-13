@@ -1,5 +1,7 @@
 # Grafana Alloy – Home Assistant Add-on
 
+![Grafana Alloy for Home Assistant](/img/logo.svg)
+
 [![Add repository to my Home Assistant][repository-badge]][repository-url]
 
 Ship the logs of **Home Assistant Core, the Supervisor, the host and every installed add-on** to [Grafana Loki](https://grafana.com/docs/loki/) with [Grafana Alloy](https://grafana.com/docs/alloy/), running as a regular add-on on Home Assistant OS.
