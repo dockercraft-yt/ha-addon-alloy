@@ -1,0 +1,27 @@
+configuration:
+  loki_host:
+    name: Hostitel Loki
+    description: >-
+      IP adresa nebo název hostitele vaší instance Loki, bez http:// a bez
+      portu (například 192.0.2.10).
+  loki_port:
+    name: Port Loki
+    description: Port vaší instance Loki (výchozí hodnota je 3100).
+  use_https:
+    name: Používat HTTPS
+    description: >-
+      Připojovat se k Loki přes HTTPS místo HTTP. Vyžaduje reverzní proxy
+      s důvěryhodným certifikátem před Loki.
+  use_basic_auth:
+    name: Používat základní ověřování
+    description: >-
+      Odesílat uživatelské jméno a heslo s každým požadavkem. Vyžaduje reverzní
+      proxy před Loki, protože Loki základní ověřování nepodporuje.
+  loki_user:
+    name: Uživatelské jméno pro základní ověřování
+    description: Používá se pouze při zapnutém základním ověřování.
+  loki_password:
+    name: Heslo pro základní ověřování
+    description: Používá se pouze při zapnutém základním ověřování.
+network:
+  12345/tcp: Webové rozhraní Alloy

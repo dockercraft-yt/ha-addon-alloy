@@ -1,0 +1,28 @@
+configuration:
+  loki_host:
+    name: Host de Loki
+    description: >-
+      Dirección IP o nombre de host de tu instancia de Loki, sin http:// ni
+      puerto (por ejemplo, 192.0.2.10).
+  loki_port:
+    name: Puerto de Loki
+    description: Puerto de tu instancia de Loki (3100 de forma predeterminada).
+  use_https:
+    name: Usar HTTPS
+    description: >-
+      Conectarse a Loki mediante HTTPS en lugar de HTTP. Requiere un proxy
+      inverso con un certificado de confianza delante de Loki.
+  use_basic_auth:
+    name: Usar autenticación básica
+    description: >-
+      Enviar un nombre de usuario y una contraseña con cada solicitud. Requiere
+      un proxy inverso delante de Loki, ya que Loki no admite autenticación
+      básica.
+  loki_user:
+    name: Usuario de autenticación básica
+    description: Solo se usa si la autenticación básica está habilitada.
+  loki_password:
+    name: Contraseña de autenticación básica
+    description: Solo se usa si la autenticación básica está habilitada.
+network:
+  12345/tcp: Interfaz web de Alloy
