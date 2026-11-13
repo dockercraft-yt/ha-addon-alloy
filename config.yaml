@@ -1,0 +1,26 @@
+name: Grafana Alloy
+version: "0.1.0"
+slug: alloy
+description: Grafana Alloy Collector für Logs und Metriken
+arch:
+  - amd64
+  - aarch64
+init: false
+startup: services
+boot: auto
+journald: true        # Zugriff auf das Host-Journal (HA-/Supervisor-/Host-Logs)
+map:
+  - addon_config:rw   # Config liegt unter /addon_configs/<slug>/ und ist per Samba/SSH editierbar
+ports:
+  12345/tcp: 12345    # Alloy-UI
+options:
+  loki_port: 3100
+  use_https: false
+  use_basic_auth: false
+schema:
+  loki_host: str
+  loki_port: port
+  use_https: bool
+  use_basic_auth: bool
+  loki_user: str?
+  loki_password: password?
