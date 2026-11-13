@@ -71,17 +71,19 @@ Use the label browser in Grafana Explore to see the container names on your syst
 
 ## Grafana dashboard
 
-An example dashboard lives in [`grafana/ha-logs-dashboard.json`](grafana/ha-logs-dashboard.json). It contains:
+<img src="img/dashboardv2_1.png" alt="Grafana Dashboard" width="600">
 
-- Totals for log lines, errors, warnings and active containers
-- Log volume and errors per container over time
-- Top 10 containers by log volume
-- Log panels for Home Assistant Core, errors and warnings, and all logs
-- Variables for the Loki data source, the container selection and a free-text search
+An example dashboard lives in [`grafana/ha-logs-dashboard-v2.json`](grafana/ha-logs-dashboard-v2.json). It contains:
+
+- Log-line counts and the number of containers with logs in the selected time range
+- Log activity by container and warning-like lines over time
+- Top containers by error-like lines and by log volume
+- Log panels for all selected containers, Home Assistant Core, error-like lines, warning-like lines, and combined errors and warnings
+- Variables for the Loki data source, a multi-select container filter, and free-text search (search applies to log panels only)
 
 To import it: **Dashboards → New → Import → Upload JSON file**, then select your Loki data source.
 
-Errors and warnings are detected by text (`ERROR`, `CRITICAL`, `WARNING`) in the log line. The `level` label comes from the Docker journal driver and only reflects stdout versus stderr, not the log level of the application.
+Error- and warning-like lines are detected by case-insensitive, whole-word text matches (`ERROR`, `CRITICAL`, `WARNING`), not by an application severity label. The `level` label comes from the Docker journal driver and only reflects stdout versus stderr.
 
 ## Custom Alloy configuration
 
@@ -115,7 +117,7 @@ More in [DOCS.md](alloy/DOCS.md).
 ├── repository.yaml
 ├── README.md
 ├── grafana/
-│   └── ha-logs-dashboard.json
+│   └── ha-logs-dashboard-v2.json
 └── alloy/
     ├── config.yaml
     ├── Dockerfile
