@@ -11,12 +11,12 @@ LOKI_USER=$(jq -r '.loki_user // empty' "$OPTS")
 LOKI_PASSWORD=$(jq -r '.loki_password // empty' "$OPTS")
 
 if [ -z "$LOKI_HOST" ] || [ -z "$LOKI_PORT" ]; then
-  echo "FEHLER: loki_host oder loki_port fehlt in der Add-on-Konfiguration"
+  echo "ERROR: loki_host or loki_port is missing in the add-on configuration"
   exit 1
 fi
 
 if [ "$USE_AUTH" = "true" ] && { [ -z "$LOKI_USER" ] || [ -z "$LOKI_PASSWORD" ]; }; then
-  echo "FEHLER: Basic Auth ist aktiv, aber Benutzer oder Passwort fehlt"
+  echo "ERROR: Basic auth is enabled, but username or password is missing"
   exit 1
 fi
 
@@ -26,17 +26,17 @@ SCHEME=http
 export LOKI_URL="${SCHEME}://${LOKI_HOST}:${LOKI_PORT}/loki/api/v1/push"
 export LOKI_USER LOKI_PASSWORD
 
-echo "Sende Logs an ${LOKI_URL}"
+echo "Sending logs to ${LOKI_URL}"
 if [ "$USE_AUTH" = "true" ]; then
-  echo "Basic Auth: aktiv (Benutzer: ${LOKI_USER})"
+  echo "Basic auth: enabled (user: ${LOKI_USER})"
 else
-  echo "Basic Auth: aus"
+  echo "Basic auth: disabled"
 fi
 
-# Beim ersten Start Default-Config anlegen
+# Create the default config on first start
 [ -f "$USERCONF/config.alloy" ] || cp /default.alloy "$USERCONF/config.alloy"
 
-# Laufzeit-Verzeichnis: Nutzer-Configs + generierter loki.write-Block
+# Runtime directory: user configs + generated loki.write block
 rm -rf "$RUNDIR" && mkdir -p "$RUNDIR"
 cp "$USERCONF"/*.alloy "$RUNDIR"/
 

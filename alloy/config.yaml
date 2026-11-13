@@ -1,18 +1,21 @@
 name: Grafana Alloy
-version: "0.1.0"
+version: "0.1.2"
 slug: alloy
-description: Grafana Alloy Collector für Logs und Metriken
+description: Grafana Alloy collector that ships Home Assistant, Supervisor and add-on logs to Loki
 arch:
   - amd64
   - aarch64
 init: false
 startup: services
 boot: auto
-journald: true        # Zugriff auf das Host-Journal (HA-/Supervisor-/Host-Logs)
+journald: true        # read-only access to the host journal (HA, Supervisor, add-on logs)
 map:
-  - addon_config:rw   # Config liegt unter /addon_configs/<slug>/ und ist per Samba/SSH editierbar
+  - addon_config:rw   # config lives in /addon_configs/<id>_alloy/
 ports:
-  12345/tcp: 12345    # Alloy-UI
+  12345/tcp: 12345
+ports_description:
+  12345/tcp: Alloy web UI
+webui: "http://[HOST]:[PORT:12345]"
 options:
   loki_port: 3100
   use_https: false
