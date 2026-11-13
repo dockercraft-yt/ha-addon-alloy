@@ -72,6 +72,6 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           gh release create "v$VERSION" \
-            --title "$VERSION" \
+            --title "Release $VERSION" \
             --notes-file release-notes.md \
             --target "$GITHUB_SHA"
