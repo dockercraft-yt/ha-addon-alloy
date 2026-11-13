@@ -22,6 +22,7 @@ loki.relabel "journal" {
 loki.source.journal "haos" {
   forward_to    = [loki.write.default.receiver]
   relabel_rules = loki.relabel.journal.rules
+  path          = "/var/log/journal"
   max_age       = "12h"
   labels        = { job = "haos-journal", host = "haos" }
 }
