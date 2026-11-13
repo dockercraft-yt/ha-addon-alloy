@@ -10,7 +10,7 @@
   "annotations": {
     "list": []
   },
-  "description": "Home Assistant, Supervisor and add-on logs collected by the Grafana Alloy add-on.",
+  "description": "An operations-focused view of Home Assistant logs collected by Grafana Alloy. Search applies to log panels only; error and warning matches are case-insensitive whole-word text matches.",
   "editable": true,
   "graphTooltip": 1,
   "id": null,
@@ -20,6 +20,7 @@
       "id": 1,
       "type": "stat",
       "title": "Log lines",
+      "description": "Number of log lines in the selected time range and containers.",
       "datasource": {
         "type": "loki",
         "uid": "${datasource}"
@@ -73,7 +74,8 @@
     {
       "id": 2,
       "type": "stat",
-      "title": "Errors (ERROR / CRITICAL)",
+      "title": "Error-like lines",
+      "description": "Lines containing the whole words ERROR or CRITICAL, regardless of case. This is a text match, not an application severity label.",
       "datasource": {
         "type": "loki",
         "uid": "${datasource}"
@@ -91,7 +93,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({job=\"haos-journal\", container=~\"$container\"} |~ \"ERROR|CRITICAL\" [$__range]))",
+          "expr": "sum(count_over_time({job=\"haos-journal\", container=~\"$container\"} |~ \"(?i)\\\\b(ERROR|CRITICAL)\\\\b\" [$__range]))",
           "refId": "A",
           "queryType": "instant"
         }
@@ -135,7 +137,8 @@
     {
       "id": 3,
       "type": "stat",
-      "title": "Warnings",
+      "title": "Warning-like lines",
+      "description": "Lines containing the whole word WARNING, regardless of case. This is a text match, not an application severity label.",
       "datasource": {
         "type": "loki",
         "uid": "${datasource}"
@@ -153,7 +156,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({job=\"haos-journal\", container=~\"$container\"} |~ \"WARNING\" [$__range]))",
+          "expr": "sum(count_over_time({job=\"haos-journal\", container=~\"$container\"} |~ \"(?i)\\\\bWARNING\\\\b\" [$__range]))",
           "refId": "A",
           "queryType": "instant"
         }
@@ -193,7 +196,8 @@
     {
       "id": 4,
       "type": "stat",
-      "title": "Active containers",
+      "title": "Containers with logs",
+      "description": "Distinct containers with at least one log line in the selected time range.",
       "datasource": {
         "type": "loki",
         "uid": "${datasource}"
@@ -247,14 +251,15 @@
     {
       "id": 5,
       "type": "timeseries",
-      "title": "Log volume by container",
+      "title": "Log activity",
+      "description": "Log lines over time, split by container.",
       "datasource": {
         "type": "loki",
         "uid": "${datasource}"
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 9,
+        "w": 16,
         "x": 0,
         "y": 4
       },
@@ -275,11 +280,11 @@
         "defaults": {
           "unit": "short",
           "custom": {
-            "drawStyle": "bars",
-            "fillOpacity": 70,
+            "drawStyle": "line",
+            "fillOpacity": 18,
             "lineWidth": 1,
             "stacking": {
-              "mode": "normal",
+              "mode": "none",
               "group": "A"
             },
             "showPoints": "never"
@@ -303,17 +308,18 @@
     },
     {
       "id": 6,
-      "type": "timeseries",
-      "title": "Errors by container",
+      "type": "bargauge",
+      "title": "Top containers by error-like lines",
+      "description": "Top 10 containers by lines containing ERROR or CRITICAL as whole words, regardless of case.",
       "datasource": {
         "type": "loki",
         "uid": "${datasource}"
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
-        "x": 12,
-        "y": 4
+        "x": 0,
+        "y": 13
       },
       "targets": [
         {
@@ -322,55 +328,49 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (container) (count_over_time({job=\"haos-journal\", container=~\"$container\"} |~ \"ERROR|CRITICAL\" [$__interval]))",
+          "expr": "topk(10, sum by (container) (count_over_time({job=\"haos-journal\", container=~\"$container\"} |~ \"(?i)\\\\b(ERROR|CRITICAL)\\\\b\" [$__range])))",
           "refId": "A",
-          "queryType": "range",
+          "queryType": "instant",
           "legendFormat": "{{container}}"
         }
       ],
       "fieldConfig": {
         "defaults": {
           "unit": "short",
-          "custom": {
-            "drawStyle": "bars",
-            "fillOpacity": 70,
-            "lineWidth": 1,
-            "stacking": {
-              "mode": "normal",
-              "group": "A"
-            },
-            "showPoints": "never"
+          "color": {
+            "mode": "continuous-RdYlGr"
           }
         },
         "overrides": []
       },
       "options": {
-        "legend": {
-          "displayMode": "table",
-          "placement": "bottom",
-          "calcs": [
-            "sum"
-          ]
+        "orientation": "horizontal",
+        "namePlacement": "left",
+        "displayMode": "gradient",
+        "showUnfilled": true,
+        "textMode": "value_and_name",
+        "reduceOptions": {
+          "fields": "",
+          "values": true,
+          "limit": 10
         },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
+        "valueMode": "color"
       }
     },
     {
       "id": 7,
       "type": "bargauge",
       "title": "Top 10 containers by log volume",
+      "description": "Containers ranked by their total log lines in the selected time range.",
       "datasource": {
         "type": "loki",
         "uid": "${datasource}"
       },
       "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 12
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 4
       },
       "targets": [
         {
@@ -396,14 +396,14 @@
       },
       "options": {
         "orientation": "horizontal",
+        "namePlacement": "left",
         "displayMode": "gradient",
         "showUnfilled": true,
+        "textMode": "value_and_name",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
           "fields": "",
-          "values": false
+          "values": true,
+          "limit": 10
         }
       }
     },
@@ -411,15 +411,16 @@
       "id": 8,
       "type": "logs",
       "title": "Home Assistant Core",
+      "description": "Home Assistant Core logs. The container selection does not affect this panel.",
       "datasource": {
         "type": "loki",
         "uid": "${datasource}"
       },
       "gridPos": {
         "h": 12,
-        "w": 24,
+        "w": 12,
         "x": 0,
-        "y": 20
+        "y": 23
       },
       "targets": [
         {
@@ -428,7 +429,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "{job=\"haos-journal\", container=\"homeassistant\"} |~ \"(?i)$search\"",
+          "expr": "{job=\"haos-journal\", container=\"homeassistant\"} |~ `(?i)${search:regex}`",
           "refId": "A",
           "queryType": "range"
         }
@@ -447,16 +448,17 @@
     {
       "id": 9,
       "type": "logs",
-      "title": "Errors and warnings (selected containers)",
+      "title": "Error- and warning-like lines",
+      "description": "Selected containers with lines containing ERROR, CRITICAL or WARNING as whole words, regardless of case.",
       "datasource": {
         "type": "loki",
         "uid": "${datasource}"
       },
       "gridPos": {
         "h": 12,
-        "w": 24,
-        "x": 0,
-        "y": 32
+        "w": 12,
+        "x": 12,
+        "y": 23
       },
       "targets": [
         {
@@ -465,7 +467,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "{job=\"haos-journal\", container=~\"$container\"} |~ \"ERROR|CRITICAL|WARNING\" |~ \"(?i)$search\"",
+          "expr": "{job=\"haos-journal\", container=~\"$container\"} |~ \"(?i)\\\\b(ERROR|CRITICAL|WARNING)\\\\b\" |~ `(?i)${search:regex}`",
           "refId": "A",
           "queryType": "range"
         }
@@ -485,6 +487,7 @@
       "id": 10,
       "type": "logs",
       "title": "All logs (selected containers)",
+      "description": "All log lines from the selected containers.",
       "datasource": {
         "type": "loki",
         "uid": "${datasource}"
@@ -493,7 +496,7 @@
         "h": 14,
         "w": 24,
         "x": 0,
-        "y": 44
+        "y": 35
       },
       "targets": [
         {
@@ -502,7 +505,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "{job=\"haos-journal\", container=~\"$container\"} |~ \"(?i)$search\"",
+          "expr": "{job=\"haos-journal\", container=~\"$container\"} |~ `(?i)${search:regex}`",
           "refId": "A",
           "queryType": "range"
         }
@@ -516,6 +519,68 @@
         "enableLogDetails": true,
         "dedupStrategy": "none",
         "sortOrder": "Descending"
+      }
+    },
+    {
+      "id": 12,
+      "type": "timeseries",
+      "title": "Warning-like lines over time",
+      "description": "Warning lines per interval and container, matching the whole word WARNING regardless of case.",
+      "datasource": {
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 13
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (container) (count_over_time({job=\"haos-journal\", container=~\"$container\"} |~ \"(?i)\\\\bWARNING\\\\b\" [$__interval]))",
+          "refId": "A",
+          "queryType": "range",
+          "legendFormat": "{{container}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "yellow"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "lineWidth": 2,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "sum"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       }
     }
   ],
@@ -573,7 +638,7 @@
       },
       {
         "name": "search",
-        "label": "Search",
+        "label": "Search text (case-insensitive)",
         "type": "textbox",
         "query": "",
         "current": {
@@ -598,7 +663,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Home Assistant Logs (Alloy)",
-  "uid": "ha-alloy-logs",
-  "version": 1
+  "title": "Home Assistant Log Operations",
+  "uid": "ha-alloy-logs-v2",
+  "version": 2
 }
