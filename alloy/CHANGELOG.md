@@ -1,6 +1,11 @@
 # Changelog
 
 All notable changes to this add-on are documented here.
+## 0.1.4
+
+### Added
+
+- Readable field names and descriptions in the add-on configuration (English and German translations).
 
 ## 0.1.3
 

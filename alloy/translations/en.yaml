@@ -1,0 +1,27 @@
+configuration:
+  loki_host:
+    name: Loki host
+    description: >-
+      IP address or hostname of your Loki instance, without http:// and
+      without port (e.g. 192.0.2.10).
+  loki_port:
+    name: Loki port
+    description: Port of your Loki instance (default 3100).
+  use_https:
+    name: Use HTTPS
+    description: >-
+      Connect to Loki via HTTPS instead of HTTP. Requires a reverse proxy
+      with a trusted certificate in front of Loki.
+  use_basic_auth:
+    name: Use Basic Auth
+    description: >-
+      Send a username and password with every request. Requires a reverse
+      proxy in front of Loki, Loki itself does not support Basic Auth.
+  loki_user:
+    name: Basic Auth username
+    description: Only used if "Use Basic Auth" is enabled.
+  loki_password:
+    name: Basic Auth password
+    description: Only used if "Use Basic Auth" is enabled.
+network:
+  12345/tcp: Alloy web UI
