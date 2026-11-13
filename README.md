@@ -130,4 +130,4 @@ Issues and pull requests are welcome. When reporting a problem, please include t
 See [LICENSE](LICENSE).
 
 [repository-badge]: https://img.shields.io/badge/Add%20repository%20to%20my-Home%20Assistant-41BDF5?logo=home-assistant&style=for-the-badge
-[repository-url]: https://my.home-assistant.io/redirect/supervisor_add_repository/?repository_url=https%3A%2F%2Fgithub.com%2FYOUR-USER%2FYOUR-REPO
+[repository-url]: https://my.home-assistant.io/redirect/supervisor_add_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fdockercraft-yt%2Fha-addon-alloy
