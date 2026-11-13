@@ -1,6 +1,8 @@
 # Grafana Alloy – Home Assistant Add-on
 
 ![Grafana Alloy for Home Assistant](/img/logo.svg)
+
+
 ![GitHub Repo stars](https://img.shields.io/github/stars/dockercraft-yt/ha-addon-alloy) ![GitHub License](https://img.shields.io/github/license/dockercraft-yt/ha-addon-alloy)
 
 [![Add repository to my Home Assistant][repository-badge]][repository-url]
