@@ -1,11 +1,19 @@
 # Grafana Alloy – Home Assistant Add-on
 
-![Grafana Alloy for Home Assistant](img/logo.svg)
+<p align="center">
+  <img src="img/logo.svg" alt="Grafana Alloy for Home Assistant">
+</p>
 
+<p align="center">
+  <img src="https://img.shields.io/github/stars/dockercraft-yt/ha-addon-alloy" alt="GitHub Repo stars">
+  <img src="https://img.shields.io/github/license/dockercraft-yt/ha-addon-alloy" alt="GitHub License">
+</p>
 
-![GitHub Repo stars](https://img.shields.io/github/stars/dockercraft-yt/ha-addon-alloy) ![GitHub License](https://img.shields.io/github/license/dockercraft-yt/ha-addon-alloy)
-
-[![Add repository to my Home Assistant][repository-badge]][repository-url]
+<p align="center">
+  <a href="https://my.home-assistant.io/redirect/supervisor_add_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fdockercraft-yt%2Fha-addon-alloy">
+    <img src="https://img.shields.io/badge/Add%20repository%20to%20my-Home%20Assistant-41BDF5?logo=home-assistant&style=for-the-badge" alt="Add repository to my Home Assistant">
+  </a>
+</p>
 
 Ship the logs of **Home Assistant Core, the Supervisor, the host and every installed add-on** to [Grafana Loki](https://grafana.com/docs/loki/) with [Grafana Alloy](https://grafana.com/docs/alloy/), running as a regular add-on on Home Assistant OS.
 
@@ -71,7 +79,9 @@ Use the label browser in Grafana Explore to see the container names on your syst
 
 ## Grafana dashboard
 
-<img src="img/dashboardv2_1.png" alt="Grafana Dashboard" width="600">
+<p align="center">
+  <img src="img/dashboardv2_1.png" alt="Grafana Dashboard" width="600">
+</p>
 
 An example dashboard lives in [`grafana/ha-logs-dashboard-v2.json`](grafana/ha-logs-dashboard-v2.json). It contains:
 
@@ -135,6 +145,3 @@ Issues and pull requests are welcome. When reporting a problem, please include t
 ## License
 
 See [LICENSE](LICENSE).
-
-[repository-badge]: https://img.shields.io/badge/Add%20repository%20to%20my-Home%20Assistant-41BDF5?logo=home-assistant&style=for-the-badge
-[repository-url]: https://my.home-assistant.io/redirect/supervisor_add_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fdockercraft-yt%2Fha-addon-alloy
