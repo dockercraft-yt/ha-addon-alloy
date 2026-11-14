@@ -11,7 +11,6 @@ arch:
   - aarch64
 init: false
 startup: services
-boot: auto
 journald: true        # read-only access to the host journal (HA, Supervisor, add-on logs)
 map:
   - addon_config:rw   # config lives in /addon_configs/<id>_alloy/
