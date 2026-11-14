@@ -1,0 +1,5 @@
+ignored:
+  # Pinning apt package versions breaks the build whenever Debian updates jq.
+  - DL3008
+  # The add-on must run as root to read the host journal.
+  - DL3002

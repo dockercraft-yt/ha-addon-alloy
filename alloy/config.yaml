@@ -1,7 +1,11 @@
 name: Grafana Alloy
-version: "0.1.7"
+version: "0.1.8"
 slug: alloy
 description: Grafana Alloy collector that ships Home Assistant, Supervisor and add-on logs to Loki
+url: https://grafana.com/docs/alloy/latest/
+# Prebuilt image from GHCR (built by .github/workflows/build.yml).
+# The Supervisor pulls <image>:<version> instead of building locally.
+image: ghcr.io/dockercraft-yt/ha-addon-alloy-{arch}
 arch:
   - amd64
   - aarch64
