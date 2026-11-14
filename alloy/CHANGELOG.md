@@ -2,6 +2,17 @@
 
 All notable changes to this add-on are documented here.
 
+## 0.1.8
+
+### Changed
+
+- The add-on now uses prebuilt images from GitHub Container Registry (`ghcr.io/dockercraft-yt/ha-addon-alloy-{arch}`). Installing and updating no longer builds the image on your device, which makes it much faster, especially on Raspberry Pi.
+
+### Added
+
+- CI: images for `amd64` and `aarch64` are built automatically; pull requests are test-built.
+- CI: lint checks for the add-on config, `run.sh` (ShellCheck), the Dockerfile (Hadolint) and `default.alloy` (Alloy syntax).
+
 ## 0.1.7
 
 ### Added

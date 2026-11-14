@@ -124,6 +124,10 @@ More in [DOCS.md](alloy/DOCS.md).
 
 ```
 .
+├── .github/workflows/
+│   ├── build.yml      # builds and pushes the images to GHCR
+│   ├── lint.yml       # add-on linter, ShellCheck, Hadolint, Alloy syntax
+│   └── release.yml    # GitHub release from CHANGELOG.md
 ├── repository.yaml
 ├── README.md
 ├── grafana/
@@ -140,7 +144,7 @@ More in [DOCS.md](alloy/DOCS.md).
 
 ## Contributing
 
-Issues and pull requests are welcome. When reporting a problem, please include the add-on log and your Home Assistant OS version, and remove any internal addresses or credentials first.
+Issues and pull requests are welcome. Every pull request is linted and test-built automatically. To ship changes to the image, bump `version` in `alloy/config.yaml` and add a matching section to `alloy/CHANGELOG.md`; published image versions are never overwritten. When reporting a problem, please include the add-on log and your Home Assistant OS version, and remove any internal addresses or credentials first.
 
 ## License
 

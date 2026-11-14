@@ -1,0 +1,59 @@
+name: Lint
+
+# Static checks for the add-on. Runs on every pull request and on pushes to
+# main, so broken configs are caught before users see them.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  addon:
+    name: Add-on config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Run Home Assistant add-on linter
+        uses: frenck/action-addon-linter@v2
+        with:
+          path: "./alloy"
+
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check run.sh
+        run: shellcheck --shell=sh alloy/run.sh
+
+  hadolint:
+    name: Hadolint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: alloy/Dockerfile
+          config: .hadolint.yaml
+          failure-threshold: warning
+
+  alloy:
+    name: Alloy config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      # `alloy fmt` parses the file and exits non-zero on syntax errors.
+      # Only the syntax is checked; indentation style is left to the author.
+      - name: Check default.alloy syntax
+        run: |
+          ALLOY_IMAGE=$(sed -nE 's/^FROM[[:space:]]+(grafana\/alloy:[^[:space:]]+).*/\1/p' alloy/Dockerfile)
+          echo "Using $ALLOY_IMAGE"
+          docker run --rm --entrypoint /bin/alloy \
+            -v "$PWD/alloy:/src:ro" "$ALLOY_IMAGE" \
+            fmt /src/default.alloy > /dev/null
