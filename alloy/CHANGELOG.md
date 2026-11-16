@@ -2,19 +2,40 @@
 
 All notable changes to this add-on are documented here.
 
-## 0.2.0
+## 0.2.0 – Minor release
 
-### Added
+This is the first minor release of the add-on. It brings a much newer Grafana Alloy and lets you keep your Alloy configuration wherever you like on Home Assistant.
 
-- New option `custom_config_path`: use your own `config.alloy` from the Home Assistant config folder (`/homeassistant/...`), the share folder (`/share/...`) or the add-on folder (`/config/...`). It replaces the `config.alloy` in the add-on folder; the Loki output is still generated from the add-on options. To make this possible, the add-on now mounts the Home Assistant config folder and the share folder read-only.
+**Highlights**
 
-### Changed
+- 🚀 Grafana Alloy **v1.22.0** (was v1.11.0)
+- 📁 Load your own `config.alloy` from the Home Assistant config or share folder
 
-- Updated Grafana Alloy from v1.11.0 to v1.22.0. The default configuration works unchanged.
+### ✨ Added
 
-### Upgrade notes
+- **Custom config file:** New option `custom_config_path`. Enter the path to your own `config.alloy` and the add-on loads it instead of the `config.alloy` in the add-on folder. The Loki output is still generated from the add-on options.
 
-- Only relevant if you added your own `*.alloy` files: Alloy 1.12 to 1.22 contain breaking changes in some components, for example `loki.write` with `wal { enabled = true }` now requires `--stability.level=experimental`, and some `loki.secretfilter` and `otelcol.*` options were removed or renamed. If the add-on fails to start after the update, check the [Alloy changelog](https://github.com/grafana/alloy/blob/main/CHANGELOG.md).
+  | Location | Example path |
+  |---|---|
+  | Home Assistant config folder | `/homeassistant/alloy/config.alloy` |
+  | Share folder | `/share/alloy/config.alloy` |
+  | Add-on config folder | `/config/my-config.alloy` |
+
+  Leave the option empty to keep using the default. Details are in the add-on documentation.
+
+### 🔄 Changed
+
+- **Grafana Alloy v1.11.0 → v1.22.0.** The default configuration works unchanged.
+- The add-on now mounts the Home Assistant config folder and the share folder **read-only**, so it can read your custom config file. Home Assistant shows this in the add-on's permissions.
+
+### ⚠️ Upgrade notes
+
+Only relevant if you added your own `*.alloy` files. Alloy 1.12 to 1.22 contain breaking changes in some components, for example:
+
+- `loki.write` with `wal { enabled = true }` now requires `--stability.level=experimental`.
+- Some `loki.secretfilter` and `otelcol.*` options were removed or renamed.
+
+If the add-on fails to start after the update, check the [Alloy changelog](https://github.com/grafana/alloy/blob/main/CHANGELOG.md).
 
 ## 0.1.9
 
