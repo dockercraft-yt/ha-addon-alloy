@@ -23,5 +23,12 @@ configuration:
   loki_password:
     name: Hasło Basic
     description: Używane tylko po włączeniu uwierzytelniania Basic.
+  custom_config_path:
+    name: Własny plik konfiguracyjny
+    description: >-
+      Opcjonalnie. Ścieżka do własnego pliku config.alloy, np.
+      /homeassistant/alloy/config.alloy lub /share/alloy/config.alloy. Zastępuje
+      config.alloy w folderze dodatku. Pozostaw puste, aby użyć konfiguracji
+      domyślnej.
 network:
   12345/tcp: Interfejs Alloy

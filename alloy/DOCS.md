@@ -39,6 +39,7 @@ The add-on log should then show `Sending logs to http://…`.
 | `use_basic_auth` | no | `false` | Use Basic Auth for the connection to Loki |
 | `loki_user` | with Basic Auth | – | Username |
 | `loki_password` | with Basic Auth | – | Password |
+| `custom_config_path` | no | – | Path to your own `config.alloy`, see [Custom Alloy configuration](#custom-alloy-configuration) |
 
 The URL is assembled automatically:
 
@@ -127,10 +128,29 @@ Rules:
 - Forward your own pipelines with `forward_to = [loki.write.default.receiver]`.
 - In your own files you can use `sys.env("LOKI_URL")` if you need the assembled URL.
 
+### Using a config file from another folder
+
+If you prefer to keep your Alloy configuration somewhere else on Home Assistant, enter its path in the `custom_config_path` option. The file then **replaces** the `config.alloy` from the add-on folder. Other `*.alloy` files in the add-on folder are still loaded, and the rules above still apply (no own `loki.write "default"` block).
+
+The add-on can read files from these folders:
+
+| Folder on Home Assistant | Path to enter | Example |
+|---|---|---|
+| Home Assistant config folder (where `configuration.yaml` lives) | `/homeassistant/...` | `/homeassistant/alloy/config.alloy` |
+| Share folder | `/share/...` | `/share/alloy/config.alloy` |
+| Add-on config folder | `/config/...` | `/config/my-config.alloy` |
+
+> **Note:** Inside this add-on, `/config` is the add-on's own folder, not the Home Assistant config folder. For a file next to your `configuration.yaml`, use `/homeassistant/...`.
+
+The add-on mounts these folders read-only. Leave the option empty to use the `config.alloy` from the add-on folder again.
+
 ## Troubleshooting
 
 **The add-on does not start and reports a configuration error**
 `loki_host` is not set, or Basic Auth is enabled but the username or password is missing.
+
+**Error "Custom Alloy config … not found or not readable"**
+The file in `custom_config_path` does not exist at that path. Check the path against the table in [Using a config file from another folder](#using-a-config-file-from-another-folder), especially `/homeassistant` vs. `/config`.
 
 **Error "component already declared"**
 One of your `.alloy` files contains its own `loki.write "default"` block. Remove it, see above.

@@ -24,5 +24,12 @@ configuration:
   loki_password:
     name: Mot de passe Basic
     description: Utilisé uniquement si l’authentification Basic est activée.
+  custom_config_path:
+    name: Fichier de configuration personnalisé
+    description: >-
+      Facultatif. Chemin vers votre propre config.alloy, par ex.
+      /homeassistant/alloy/config.alloy ou /share/alloy/config.alloy. Remplace
+      le config.alloy du dossier de l'add-on. Laisser vide pour la configuration
+      par défaut.
 network:
   12345/tcp: Interface web Alloy

@@ -24,5 +24,12 @@ configuration:
   loki_password:
     name: Lösenord för Basic-autentisering
     description: Används bara om Basic-autentisering är aktiverad.
+  custom_config_path:
+    name: Egen konfigurationsfil
+    description: >-
+      Valfritt. Sökväg till din egen config.alloy, t.ex.
+      /homeassistant/alloy/config.alloy eller /share/alloy/config.alloy.
+      Ersätter config.alloy i tilläggets mapp. Lämna tomt för
+      standardkonfigurationen.
 network:
   12345/tcp: Alloy-webbgränssnitt

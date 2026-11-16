@@ -39,6 +39,7 @@ Im Log des Add-ons sollte danach `Sende Logs an http://…` stehen.
 | `use_basic_auth` | nein | `false` | Basic Auth für die Verbindung zu Loki verwenden |
 | `loki_user` | bei Basic Auth | – | Benutzername |
 | `loki_password` | bei Basic Auth | – | Passwort |
+| `custom_config_path` | nein | – | Pfad zu deiner eigenen `config.alloy`, siehe [Eigene Alloy-Konfiguration](#eigene-alloy-konfiguration) |
 
 Die URL wird automatisch zusammengesetzt:
 
@@ -127,10 +128,29 @@ Regeln:
 - Leite eigene Pipelines mit `forward_to = [loki.write.default.receiver]` weiter.
 - In eigenen Dateien kannst du `sys.env("LOKI_URL")` verwenden, wenn du die zusammengesetzte URL brauchst.
 
+### Konfigurationsdatei aus einem anderen Ordner verwenden
+
+Wenn du deine Alloy-Konfiguration lieber an einem anderen Ort auf Home Assistant ablegen möchtest, trag ihren Pfad in die Option `custom_config_path` ein. Die Datei **ersetzt** dann die `config.alloy` aus dem Add-on-Ordner. Weitere `*.alloy`-Dateien im Add-on-Ordner werden weiterhin geladen, und die Regeln oben gelten weiter (kein eigener `loki.write "default"`-Block).
+
+Das Add-on kann Dateien aus diesen Ordnern lesen:
+
+| Ordner auf Home Assistant | Einzutragender Pfad | Beispiel |
+|---|---|---|
+| Home-Assistant-Konfigurationsordner (dort liegt `configuration.yaml`) | `/homeassistant/...` | `/homeassistant/alloy/config.alloy` |
+| Share-Ordner | `/share/...` | `/share/alloy/config.alloy` |
+| Konfigurationsordner des Add-ons | `/config/...` | `/config/meine-config.alloy` |
+
+> **Hinweis:** Innerhalb dieses Add-ons ist `/config` der eigene Ordner des Add-ons, nicht der Home-Assistant-Konfigurationsordner. Für eine Datei neben deiner `configuration.yaml` verwende `/homeassistant/...`.
+
+Das Add-on bindet diese Ordner schreibgeschützt ein. Lass die Option leer, um wieder die `config.alloy` aus dem Add-on-Ordner zu verwenden.
+
 ## Fehlersuche
 
 **Das Add-on startet nicht und meldet einen Konfigurationsfehler**
 `loki_host` ist nicht gesetzt, oder Basic Auth ist aktiv, aber Benutzer oder Passwort fehlen.
+
+**Fehler "Custom Alloy config … not found or not readable"**
+Die Datei aus `custom_config_path` existiert unter diesem Pfad nicht. Prüfe den Pfad anhand der Tabelle unter [Konfigurationsdatei aus einem anderen Ordner verwenden](#konfigurationsdatei-aus-einem-anderen-ordner-verwenden), vor allem `/homeassistant` vs. `/config`.
 
 **Fehler "component already declared"**
 In einer deiner `.alloy`-Dateien steht ein eigener `loki.write "default"`-Block. Entfernen, siehe oben.

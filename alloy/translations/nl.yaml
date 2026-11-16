@@ -24,5 +24,11 @@ configuration:
   loki_password:
     name: Wachtwoord voor Basic-authenticatie
     description: Alleen gebruikt als Basic-authenticatie is ingeschakeld.
+  custom_config_path:
+    name: Eigen configuratiebestand
+    description: >-
+      Optioneel. Pad naar je eigen config.alloy, bijv.
+      /homeassistant/alloy/config.alloy of /share/alloy/config.alloy. Vervangt
+      de config.alloy in de add-on-map. Leeg laten voor de standaardconfiguratie.
 network:
   12345/tcp: Alloy-webinterface
