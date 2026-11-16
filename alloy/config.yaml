@@ -13,7 +13,7 @@ init: false
 startup: services
 journald: true        # read-only access to the host journal (HA, Supervisor, add-on logs)
 map:
-  - addon_config:rw   # config lives in /addon_configs/<id>_alloy/
+  - app_config:rw     # config lives in /addon_configs/<id>_alloy/
 ports:
   12345/tcp: 12345
 ports_description:

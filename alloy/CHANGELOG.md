@@ -12,6 +12,10 @@ All notable changes to this add-on are documented here.
 
 - Only relevant if you added your own `*.alloy` files: Alloy 1.12 to 1.22 contain breaking changes in some components, for example `loki.write` with `wal { enabled = true }` now requires `--stability.level=experimental`, and some `loki.secretfilter` and `otelcol.*` options were removed or renamed. If the add-on fails to start after the update, check the [Alloy changelog](https://github.com/grafana/alloy/blob/main/CHANGELOG.md).
 
+### Fixed
+
+- Replaced the legacy map type `addon_config` with `app_config` in the add-on config. This removes the Supervisor warning "uses legacy map type 'addon_config'". The config folder and your existing `config.alloy` are unchanged.
+
 ## 0.1.8
 
 ### Changed
