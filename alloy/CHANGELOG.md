@@ -2,6 +2,12 @@
 
 All notable changes to this add-on are documented here.
 
+## 0.1.9
+
+### Fixed
+
+- Replaced the legacy map type `addon_config` with `app_config` in the add-on config. This removes the Supervisor warning "uses legacy map type 'addon_config'". The config folder and your existing `config.alloy` are unchanged.
+
 ## 0.1.8
 
 ### Changed
