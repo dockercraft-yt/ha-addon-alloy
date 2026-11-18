@@ -29,7 +29,7 @@ configuration:
     description: >-
       Facultatif. Chemin vers votre propre config.alloy, par ex.
       /homeassistant/alloy/config.alloy ou /share/alloy/config.alloy. Remplace
-      le config.alloy du dossier de l'add-on. Laisser vide pour la configuration
-      par défaut.
+      le config.alloy du dossier du module complémentaire. Laisser vide pour la
+      configuration par défaut.
 network:
   12345/tcp: Interface web Alloy

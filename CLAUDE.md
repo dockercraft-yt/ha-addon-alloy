@@ -55,9 +55,17 @@ Wenn eine neue Option dazukommt: `config.yaml` (options/schema), `run.sh`, **all
 
 Unter Windows fehlen Docker, ShellCheck und jq; dort nur `sh -n alloy/run.sh` möglich. Volle Tests auf dem Linux-Rechner:
 
+ShellCheck und Hadolint sind auf dem Linux-Rechner nicht installiert, laufen aber per Docker. Für den Add-on-Linter gibt es kein öffentliches Image; `frenck/action-addon-linter` (Tag `v2`) klonen und `src/` bauen:
+
 ```bash
-shellcheck --shell=sh alloy/run.sh
-docker run --rm -i hadolint/hadolint < alloy/Dockerfile
+docker run --rm -v "$PWD:/mnt:ro" koalaman/shellcheck:stable --shell=sh /mnt/alloy/run.sh
+docker run --rm -i -v "$PWD/.hadolint.yaml:/.config/hadolint.yaml:ro" hadolint/hadolint \
+  hadolint --config /.config/hadolint.yaml --failure-threshold warning - < alloy/Dockerfile
+# Add-on-Linter (INPUT_COMMUNITY muss gesetzt sein, sonst KeyError):
+git clone -q --depth 1 -b v2 https://github.com/frenck/action-addon-linter.git /tmp/linter
+docker build -t addon-linter /tmp/linter/src
+docker run --rm -v "$PWD:/github/workspace:ro" -w /github/workspace \
+  -e INPUT_PATH=./alloy -e INPUT_COMMUNITY=false addon-linter
 
 mkdir -p test/{data,config,homeassistant/alloy,share}
 cp alloy/default.alloy test/homeassistant/alloy/config.alloy
@@ -76,5 +84,5 @@ Realistischer Test auf Home Assistant: `alloy/` nach `/addons/alloy_dev/` kopier
 
 ## Offene Punkte
 
-- [ ] 0.2.0 auf dem Linux-Rechner prüfen: ShellCheck, Add-on-Linter, Hadolint, Image bauen und `custom_config_path` testen (leer, `/homeassistant/...`, nicht vorhandener `/config/...`-Pfad, relativer Pfad).
-- [ ] Übersetzungen von `custom_config_path` (außer de/en) wurden von Claude geschrieben, ggf. gegenlesen lassen.
+- [x] 0.2.0 auf dem Linux-Rechner geprüft (2026-11-18): ShellCheck, Add-on-Linter, Hadolint, `alloy fmt` ok; Image gebaut; `custom_config_path` leer, `/homeassistant/...`, nicht vorhandener `/config/...`-Pfad und relativer Pfad verhalten sich wie vorgesehen.
+- [x] Übersetzungen von `custom_config_path` von Claude gegengelesen (2026-11-18): pt auf brasilianisches Portugiesisch vereinheitlicht, fr/it typografisches Apostroph und HA-Begriffe („module complémentaire“, „componente aggiuntivo“). Muttersprachliche Prüfung steht weiter aus.
