@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://my.home-assistant.io/redirect/supervisor_add_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fdockercraft-yt%2Fha-addon-alloy">
+  <a href="https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fdockercraft-yt%2Fha-addon-alloy">
     <img src="https://img.shields.io/badge/Add%20repository%20to%20my-Home%20Assistant-41BDF5?logo=home-assistant&style=for-the-badge" alt="Add repository to my Home Assistant">
   </a>
 </p>
