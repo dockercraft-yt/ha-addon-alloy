@@ -2,6 +2,42 @@
 
 All notable changes to this add-on are documented here.
 
+## 0.2.0 – Minor release
+
+This is the first minor release of the app. It brings a much newer Grafana Alloy and lets you keep your Alloy configuration wherever you like on Home Assistant.
+
+**Highlights**
+
+- 🚀 Grafana Alloy **v1.22.0** (was v1.11.0)
+- 📁 Load your own `config.alloy` from the Home Assistant config or share folder
+
+### ✨ Added
+
+- **Custom config file:** New option `custom_config_path`. Enter the path to your own `config.alloy` and the app loads it instead of the `config.alloy` in the app folder. The Loki output is still generated from the app options.
+
+  | Location | Example path |
+  |---|---|
+  | Home Assistant config folder | `/homeassistant/alloy/config.alloy` |
+  | Share folder | `/share/alloy/config.alloy` |
+  | App config folder | `/config/my-config.alloy` |
+
+  Leave the option empty to keep using the default. Details are in the app documentation.
+
+### 🔄 Changed
+
+- **Grafana Alloy v1.11.0 → v1.22.0.** The default configuration works unchanged.
+- The documentation now uses "app" instead of "add-on", following the renaming in Home Assistant 2026.2. Install path: **Settings → Apps → Install app**.
+- The app now mounts the Home Assistant config folder and the share folder **read-only**, so it can read your custom config file. Home Assistant shows this in the app's permissions.
+
+### ⚠️ Upgrade notes
+
+Only relevant if you added your own `*.alloy` files. Alloy 1.12 to 1.22 contain breaking changes in some components, for example:
+
+- `loki.write` with `wal { enabled = true }` now requires `--stability.level=experimental`.
+- Some `loki.secretfilter` and `otelcol.*` options were removed or renamed.
+
+If the app fails to start after the update, check the [Alloy changelog](https://github.com/grafana/alloy/blob/main/CHANGELOG.md).
+
 ## 0.1.9
 
 ### Fixed

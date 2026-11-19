@@ -1,4 +1,4 @@
-FROM grafana/alloy:v1.11.0
+FROM grafana/alloy:v1.22.0
 
 ARG BUILD_ARCH
 ARG BUILD_VERSION

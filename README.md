@@ -1,4 +1,4 @@
-# Grafana Alloy – Home Assistant Add-on
+# Grafana Alloy – Home Assistant App
 
 <p align="center">
   <img src="img/logo.svg" alt="Grafana Alloy for Home Assistant">
@@ -15,27 +15,27 @@
   </a>
 </p>
 
-Ship the logs of **Home Assistant Core, the Supervisor, the host and every installed add-on** to [Grafana Loki](https://grafana.com/docs/loki/) with [Grafana Alloy](https://grafana.com/docs/alloy/), running as a regular add-on on Home Assistant OS.
+Ship the logs of **Home Assistant Core, the Supervisor, the host and every installed app** to [Grafana Loki](https://grafana.com/docs/loki/) with [Grafana Alloy](https://grafana.com/docs/alloy/), running as a regular app on Home Assistant OS. (Apps were called add-ons before Home Assistant 2026.2.)
 
-> This is an unofficial community add-on. It is not affiliated with or endorsed by Grafana Labs or Nabu Casa.
+> This is an unofficial community app. It is not affiliated with or endorsed by Grafana Labs or Nabu Casa.
 
-## Why this add-on?
+## Why this app?
 
-- **Everything in one place:** Core, Supervisor, host and all add-on logs end up in Loki, searchable in Grafana.
-- **Small and simple:** Based on the official `grafana/alloy` image. No extra privileges, no disabled protection mode, no Docker API access. The add-on only reads the host journal, read-only.
-- **Configured from the Home Assistant UI:** Loki host and port, optional HTTPS and optional Basic Auth are plain add-on options.
-- **Hackable:** Alloy's own web UI is available, and you can extend the default pipeline with your own `*.alloy` files.
+- **Everything in one place:** Core, Supervisor, host and all app logs end up in Loki, searchable in Grafana.
+- **Small and simple:** Based on the official `grafana/alloy` image. No extra privileges, no disabled protection mode, no Docker API access. The app only reads the host journal, read-only. It can also read the Home Assistant config and share folders, but only so you can load your own config file from there.
+- **Configured from the Home Assistant UI:** Loki host and port, optional HTTPS and optional Basic Auth are plain app options.
+- **Hackable:** Alloy's own web UI is available, and you can extend the default pipeline with your own `*.alloy` files or point the app to your own `config.alloy` anywhere in your Home Assistant config or share folder.
 - **Example dashboard included:** Import it into Grafana and get log volume, errors and log streams per container.
 
 ## Requirements
 
-- Home Assistant OS (add-ons require the Supervisor)
+- Home Assistant OS (apps require the Supervisor)
 - A reachable Loki instance
 - Grafana with a Loki data source (for the dashboard)
 
 ## Installation
 
-1. Click the badge above, or go to **Settings → Add-ons → Add-on Store → ⋮ → Repositories** and add:
+1. Click the badge above, or go to **Settings → Apps → Install app → ⋮ → Repositories** and add:
 
    ```
    https://github.com/dockercraft-yt/ha-addon-alloy
@@ -43,9 +43,9 @@ Ship the logs of **Home Assistant Core, the Supervisor, the host and every insta
 
 2. Install **Grafana Alloy** from the store.
 3. Open the **Configuration** tab, enter your Loki host (and port if it is not `3100`) and save.
-4. Start the add-on.
+4. Start the app.
 
-The add-on log should show `Sending logs to http://…`. A few seconds later the first entries appear in Grafana.
+The app log should show `Sending logs to http://…`. A few seconds later the first entries appear in Grafana.
 
 ## Configuration
 
@@ -57,8 +57,9 @@ The add-on log should show `Sending logs to http://…`. A few seconds later the
 | `use_basic_auth` | no | `false` | Use Basic Auth |
 | `loki_user` | with Basic Auth | – | Username |
 | `loki_password` | with Basic Auth | – | Password |
+| `custom_config_path` | no | – | Path to your own `config.alloy`, see [Custom Alloy configuration](#custom-alloy-configuration) |
 
-Restart the add-on after changing options. HTTPS and Basic Auth are meant for setups with a reverse proxy in front of Loki, because Loki itself supports neither. See [DOCS.md](alloy/DOCS.md) for details.
+Restart the app after changing options. HTTPS and Basic Auth are meant for setups with a reverse proxy in front of Loki, because Loki itself supports neither. See [DOCS.md](alloy/DOCS.md) for details.
 
 ## Finding your logs
 
@@ -68,7 +69,7 @@ Every entry carries `job="haos-journal"` plus the labels `container`, `syslog_id
 # Home Assistant Core
 {job="haos-journal", container="homeassistant"}
 
-# One add-on (container name is addon_<slug>)
+# One app (container name is addon_<slug>)
 {job="haos-journal", container="addon_core_ssh"}
 
 # Errors across everything
@@ -97,19 +98,32 @@ Error- and warning-like lines are detected by case-insensitive, whole-word text 
 
 ## Custom Alloy configuration
 
-On first start, a default `config.alloy` is created in the add-on's config folder (`/addon_configs/<ID>_alloy/`, reachable via the Samba or SSH add-on). It is never overwritten by updates. All `*.alloy` files in that folder are loaded.
+On first start, a default `config.alloy` is created in the app's config folder (`/addon_configs/<ID>_alloy/`, reachable via the Samba or SSH app). It is never overwritten by updates. All `*.alloy` files in that folder are loaded.
 
-The `loki.write "default"` block is generated from the add-on options. Do not define it yourself, and forward your own pipelines to `loki.write.default.receiver`.
+The `loki.write "default"` block is generated from the app options. Do not define it yourself, and forward your own pipelines to `loki.write.default.receiver`.
+
+### Using your own config file
+
+To keep your Alloy configuration somewhere else, enter its path in the `custom_config_path` option. The file then replaces the `config.alloy` from the app folder. Other `*.alloy` files in the app folder are still loaded, and the Loki output is still generated from the app options.
+
+| Folder on Home Assistant | Path to enter | Example |
+|---|---|---|
+| Home Assistant config folder (with `configuration.yaml`) | `/homeassistant/...` | `/homeassistant/alloy/config.alloy` |
+| Share folder | `/share/...` | `/share/alloy/config.alloy` |
+| App config folder | `/config/...` | `/config/my-config.alloy` |
+
+Inside the app, `/config` is the app's own folder, not the Home Assistant config folder. For a file next to your `configuration.yaml`, use `/homeassistant/...`. Leave the option empty to go back to the default.
 
 ## Troubleshooting
 
-- **The add-on runs but no logs arrive:** Make sure the `loki.source.journal` block in your `config.alloy` contains `path = "/var/log/journal"`. Without it, the journal can appear empty inside the container. You can check delivery with:
+- **The app runs but no logs arrive:** Make sure the `loki.source.journal` block in your `config.alloy` contains `path = "/var/log/journal"`. Without it, the journal can appear empty inside the container. You can check delivery with:
 
   ```
-  curl -s http://<ADDON-HOSTNAME>:12345/metrics | grep loki_write_sent_entries_total
+  curl -s http://<APP-HOSTNAME>:12345/metrics | grep loki_write_sent_entries_total
   ```
 
 - **"component already declared":** Your own `.alloy` file defines `loki.write "default"`. Remove it.
+- **"Custom Alloy config … not found or not readable":** The path in `custom_config_path` is wrong. Use `/homeassistant/...` for the Home Assistant config folder, not `/config/...`.
 - **Certificate errors with HTTPS:** Self-signed certificates are currently not supported.
 
 More in [DOCS.md](alloy/DOCS.md).
@@ -117,8 +131,9 @@ More in [DOCS.md](alloy/DOCS.md).
 ## Security notes
 
 - The Alloy web UI on port 12345 has no login. Do not expose it to the internet.
-- The Basic Auth password is stored in plain text in the add-on options, like every add-on option. It is not written to the log.
-- Home Assistant and add-on logs can contain sensitive data such as hostnames, IP addresses or tokens. Send them only to a Loki instance you trust.
+- The Basic Auth password is stored in plain text in the app options, like every app option. It is not written to the log.
+- The app mounts the Home Assistant config folder (including `secrets.yaml`) and the share folder read-only, so it can load a config file from `custom_config_path`. It does not read anything else from there.
+- Home Assistant and app logs can contain sensitive data such as hostnames, IP addresses or tokens. Send them only to a Loki instance you trust.
 
 ## Repository layout
 
@@ -130,6 +145,7 @@ More in [DOCS.md](alloy/DOCS.md).
 │   └── release.yml    # GitHub release from CHANGELOG.md
 ├── repository.yaml
 ├── README.md
+├── img/               # logo and screenshots for the README
 ├── grafana/
 │   └── ha-logs-dashboard-v2.json
 └── alloy/
@@ -138,13 +154,14 @@ More in [DOCS.md](alloy/DOCS.md).
     ├── run.sh
     ├── default.alloy
     ├── DOCS.md
+    ├── DOCS.de.md     # German documentation
     ├── CHANGELOG.md
-    └── translations/
+    └── translations/  # option names and descriptions in 12 languages
 ```
 
 ## Contributing
 
-Issues and pull requests are welcome. Every pull request is linted and test-built automatically. To ship changes to the image, bump `version` in `alloy/config.yaml` and add a matching section to `alloy/CHANGELOG.md`; published image versions are never overwritten. When reporting a problem, please include the add-on log and your Home Assistant OS version, and remove any internal addresses or credentials first.
+Issues and pull requests are welcome. Every pull request is linted and test-built automatically. To ship changes to the image, bump `version` in `alloy/config.yaml` and add a matching section to `alloy/CHANGELOG.md`; published image versions are never overwritten. When reporting a problem, please include the app log and your Home Assistant OS version, and remove any internal addresses or credentials first.
 
 ## License
 

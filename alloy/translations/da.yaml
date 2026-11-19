@@ -23,5 +23,12 @@ configuration:
   loki_password:
     name: Adgangskode til Basic-godkendelse
     description: Bruges kun, når Basic-godkendelse er aktiveret.
+  custom_config_path:
+    name: Egen konfigurationsfil
+    description: >-
+      Valgfrit. Sti til din egen config.alloy, f.eks.
+      /homeassistant/alloy/config.alloy eller /share/alloy/config.alloy.
+      Erstatter config.alloy i appens mappe. Lad feltet stå tomt for
+      standardkonfigurationen.
 network:
   12345/tcp: Alloy-webgrænseflade

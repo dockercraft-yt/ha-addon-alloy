@@ -23,5 +23,12 @@ configuration:
   loki_password:
     name: Heslo pro základní ověřování
     description: Používá se pouze při zapnutém základním ověřování.
+  custom_config_path:
+    name: Vlastní konfigurační soubor
+    description: >-
+      Volitelné. Cesta k vlastnímu souboru config.alloy, např.
+      /homeassistant/alloy/config.alloy nebo /share/alloy/config.alloy.
+      Nahrazuje config.alloy ve složce aplikace. Ponechte prázdné pro výchozí
+      konfiguraci.
 network:
   12345/tcp: Webové rozhraní Alloy

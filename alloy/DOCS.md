@@ -1,14 +1,14 @@
 # Grafana Alloy
 
-This add-on runs [Grafana Alloy](https://grafana.com/docs/alloy/) directly on your Home Assistant OS and ships the logs of **Home Assistant Core, the Supervisor, the host and all installed add-ons** to a [Grafana Loki](https://grafana.com/docs/loki/) instance.
+This app runs [Grafana Alloy](https://grafana.com/docs/alloy/) directly on your Home Assistant OS and ships the logs of **Home Assistant Core, the Supervisor, the host and all installed apps** to a [Grafana Loki](https://grafana.com/docs/loki/) instance. (Apps were called add-ons before Home Assistant 2026.2.)
 
 ## How does it work?
 
-On Home Assistant OS, Core, the Supervisor and all add-ons run as Docker containers. Docker writes their logs to the host's journal. This add-on reads that journal (read-only), attaches labels to the entries and sends them to Loki. No extra privileges such as Docker API access or a disabled protection mode are required.
+On Home Assistant OS, Core, the Supervisor and all apps run as Docker containers. Docker writes their logs to the host's journal. This app reads that journal (read-only), attaches labels to the entries and sends them to Loki. No extra privileges such as Docker API access or a disabled protection mode are required.
 
 ## Requirements
 
-- Home Assistant OS (add-ons require the Supervisor)
+- Home Assistant OS (apps require the Supervisor)
 - A reachable Loki instance (push endpoint `/loki/api/v1/push`)
 
 Quick test from the Home Assistant terminal:
@@ -21,13 +21,13 @@ If it returns `ready`, Loki is reachable.
 
 ## Installation
 
-1. Settings → Add-ons → Add-on Store → ⋮ → **Repositories**
+1. Settings → Apps → Install app → ⋮ → **Repositories**
 2. Add the URL of this repository
 3. Install "Grafana Alloy"
 4. In the **Configuration** tab, set at least the Loki host (see below) and save
-5. Start the add-on
+5. Start the app
 
-The add-on log should then show `Sending logs to http://…`.
+The app log should then show `Sending logs to http://…`.
 
 ## Configuration
 
@@ -39,6 +39,7 @@ The add-on log should then show `Sending logs to http://…`.
 | `use_basic_auth` | no | `false` | Use Basic Auth for the connection to Loki |
 | `loki_user` | with Basic Auth | – | Username |
 | `loki_password` | with Basic Auth | – | Password |
+| `custom_config_path` | no | – | Path to your own `config.alloy`, see [Custom Alloy configuration](#custom-alloy-configuration) |
 
 The URL is assembled automatically:
 
@@ -46,7 +47,7 @@ The URL is assembled automatically:
 <http|https>://<loki_host>:<loki_port>/loki/api/v1/push
 ```
 
-**Changes to the options only take effect after restarting the add-on.**
+**Changes to the options only take effect after restarting the app.**
 
 ### HTTPS and Basic Auth
 
@@ -60,7 +61,7 @@ curl -u USER:PASSWORD https://<LOKI-HOST>:<PORT>/ready
 
 **Known limitation:** Self-signed certificates are currently not accepted. The certificate must come from an authority the container trusts (e.g. Let's Encrypt).
 
-As with all add-on options, the password is stored in plain text in the add-on configuration (`/data/options.json`). It is not printed to the log.
+As with all app options, the password is stored in plain text in the app configuration (`/data/options.json`). It is not printed to the log.
 
 ## Alloy web UI
 
@@ -70,7 +71,7 @@ Alloy ships with its own web interface (pipeline graph, component status, debug 
 http://<HOME-ASSISTANT-IP>:12345
 ```
 
-The add-on page also has an **Open Web UI** button. The add-on intentionally does **not** appear in the sidebar.
+The app page also has an **Open Web UI** button. The app intentionally does **not** appear in the sidebar.
 
 > **Note:** The web UI is not protected by a login. Anyone on the same network who can reach port 12345 can view it. Do not expose this port to the internet.
 
@@ -95,7 +96,7 @@ Example queries (LogQL):
 # Supervisor
 {container="hassio_supervisor"}
 
-# A specific add-on (example: SSH add-on)
+# A specific app (example: SSH app)
 {container="addon_core_ssh"}
 
 # All errors
@@ -104,7 +105,7 @@ Example queries (LogQL):
 # Search for text
 {container="homeassistant"} |= "error"
 
-# All add-ons together
+# All apps together
 {container=~"addon_.+"}
 ```
 
@@ -112,31 +113,50 @@ Grafana's query editor lists the available container names under the `container`
 
 ## Custom Alloy configuration
 
-On first start, the add-on creates a default configuration (`config.alloy`) in the add-on's config folder:
+On first start, the app creates a default configuration (`config.alloy`) in the app's config folder:
 
 ```
 /addon_configs/<ID>_alloy/
 ```
 
-The folder is accessible via the Samba or SSH add-on. The file is **not overwritten** on updates, so you can edit it freely. To reset it, delete the file; it will be recreated on the next start.
+The folder is accessible via the Samba or SSH app. The file is **not overwritten** on updates, so you can edit it freely. To reset it, delete the file; it will be recreated on the next start.
 
 Rules:
 
 - All `*.alloy` files in this folder are loaded.
-- The target block `loki.write "default"` is generated by the add-on from your options. **Do not define it in your own files**, otherwise Alloy fails with "component already declared".
+- The target block `loki.write "default"` is generated by the app from your options. **Do not define it in your own files**, otherwise Alloy fails with "component already declared".
 - Forward your own pipelines with `forward_to = [loki.write.default.receiver]`.
 - In your own files you can use `sys.env("LOKI_URL")` if you need the assembled URL.
 
+### Using a config file from another folder
+
+If you prefer to keep your Alloy configuration somewhere else on Home Assistant, enter its path in the `custom_config_path` option. The file then **replaces** the `config.alloy` from the app folder. Other `*.alloy` files in the app folder are still loaded, and the rules above still apply (no own `loki.write "default"` block).
+
+The app can read files from these folders:
+
+| Folder on Home Assistant | Path to enter | Example |
+|---|---|---|
+| Home Assistant config folder (where `configuration.yaml` lives) | `/homeassistant/...` | `/homeassistant/alloy/config.alloy` |
+| Share folder | `/share/...` | `/share/alloy/config.alloy` |
+| App config folder | `/config/...` | `/config/my-config.alloy` |
+
+> **Note:** Inside this app, `/config` is the app's own folder, not the Home Assistant config folder. For a file next to your `configuration.yaml`, use `/homeassistant/...`.
+
+The app mounts these folders read-only. Leave the option empty to use the `config.alloy` from the app folder again.
+
 ## Troubleshooting
 
-**The add-on does not start and reports a configuration error**
+**The app does not start and reports a configuration error**
 `loki_host` is not set, or Basic Auth is enabled but the username or password is missing.
+
+**Error "Custom Alloy config … not found or not readable"**
+The file in `custom_config_path` does not exist at that path. Check the path against the table in [Using a config file from another folder](#using-a-config-file-from-another-folder), especially `/homeassistant` vs. `/config`.
 
 **Error "component already declared"**
 One of your `.alloy` files contains its own `loki.write "default"` block. Remove it, see above.
 
 **No logs arrive in Grafana**
-1. Check the add-on log for `Sending logs to …` with the correct URL.
+1. Check the app log for `Sending logs to …` with the correct URL.
 2. Test Loki reachability with `curl …/ready` from the Home Assistant terminal.
 3. In the Alloy web UI (port 12345), check the status of the `loki.source.journal` and `loki.write` components.
 4. Check the time range in Grafana: on first start, at most the last 12 hours are backfilled.
@@ -149,4 +169,4 @@ On first start many old entries can arrive at once. Raise the limit in Loki or l
 
 ## Privacy
 
-Logs from Home Assistant and add-ons can contain sensitive information such as hostnames, IP addresses, email addresses or tokens. Only send them to a Loki instance you trust, and protect access to Loki and Grafana accordingly.
+Logs from Home Assistant and apps can contain sensitive information such as hostnames, IP addresses, email addresses or tokens. Only send them to a Loki instance you trust, and protect access to Loki and Grafana accordingly.
