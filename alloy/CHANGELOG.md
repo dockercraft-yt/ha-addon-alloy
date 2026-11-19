@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this add-on are documented here.
+All notable changes to this app are documented here.
 
 ## 0.2.0 – Minor release
 
