@@ -86,7 +86,7 @@ docker run --rm -p 12345:12345 \
 
 Den Ordner `test/` nicht committen.
 
-Realistischer Test auf Home Assistant: `alloy/` nach `/addons/alloy_dev/` kopieren, dort in `config.yaml` die `image:`-Zeile löschen (dann baut der Supervisor lokal) und `slug: alloy_dev` / `name: Grafana Alloy (dev)` setzen. Danach im Add-on Store unter "Lokale Add-ons" installieren. Das reguläre Add-on vorher stoppen (gleicher Port 12345, doppelte Logs).
+Realistischer Test auf Home Assistant: `alloy/` per Samba- oder SSH-App nach `/local_apps/alloy_dev/` kopieren (ältere HA-Versionen: `/addons/alloy_dev/`). Dort in `config.yaml` die `image:`-Zeile löschen (dann baut der Supervisor lokal) und `slug: alloy_dev` / `name: Grafana Alloy (dev)` setzen. Danach **Settings → Apps → Install app** (App store) öffnen, oben rechts im **⋮**-Menü **Check for updates** wählen, ggf. Seite neu laden und die App im Abschnitt **Local apps** installieren. Die reguläre App vorher stoppen (gleicher Port 12345, doppelte Logs).
 
 ## Stand
 
@@ -97,4 +97,4 @@ Realistischer Test auf Home Assistant: `alloy/` nach `/addons/alloy_dev/` kopier
 
 - [ ] Muttersprachliche Prüfung der Übersetzungen (außer de/en), vor allem `custom_config_path` und die Begriffe für „App“ (fr „application“, it „app“, es „aplicación“, pt „aplicativo“, pl „aplikacja“, cs „aplikace“, nl/sv/nb/da „app“). Unklar, ob das die offiziellen HA-Begriffe der jeweiligen Sprache sind.
 - [ ] Deutsche Buttonbeschriftung „App installieren“ in `DOCS.de.md` in der echten HA-Oberfläche prüfen.
-- [ ] Menünamen beim lokalen Test („Add-on Store“, „Lokale Add-ons“, siehe oben) an die aktuelle HA-Oberfläche anpassen.
+- [ ] Beim nächsten lokalen Test prüfen, ob der Ordner auf deinem System `/local_apps` oder noch `/addons` heißt, und den Abschnitt oben entsprechend festziehen.
