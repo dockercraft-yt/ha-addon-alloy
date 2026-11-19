@@ -29,7 +29,7 @@ configuration:
     description: >-
       Valfritt. Sökväg till din egen config.alloy, t.ex.
       /homeassistant/alloy/config.alloy eller /share/alloy/config.alloy.
-      Ersätter config.alloy i tilläggets mapp. Lämna tomt för
+      Ersätter config.alloy i appens mapp. Lämna tomt för
       standardkonfigurationen.
 network:
   12345/tcp: Alloy-webbgränssnitt

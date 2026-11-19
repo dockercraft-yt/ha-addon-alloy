@@ -28,7 +28,7 @@ configuration:
     description: >-
       Volitelné. Cesta k vlastnímu souboru config.alloy, např.
       /homeassistant/alloy/config.alloy nebo /share/alloy/config.alloy.
-      Nahrazuje config.alloy ve složce doplňku. Ponechte prázdné pro výchozí
+      Nahrazuje config.alloy ve složce aplikace. Ponechte prázdné pro výchozí
       konfiguraci.
 network:
   12345/tcp: Webové rozhraní Alloy

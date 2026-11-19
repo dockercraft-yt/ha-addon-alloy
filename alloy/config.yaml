@@ -1,7 +1,7 @@
 name: Grafana Alloy
 version: "0.2.0"
 slug: alloy
-description: Grafana Alloy collector that ships Home Assistant, Supervisor and add-on logs to Loki
+description: Grafana Alloy collector that ships Home Assistant, Supervisor and app logs to Loki
 url: https://grafana.com/docs/alloy/latest/
 # Prebuilt image from GHCR (built by .github/workflows/build.yml).
 # The Supervisor pulls <image>:<version> instead of building locally.
@@ -11,7 +11,7 @@ arch:
   - aarch64
 init: false
 startup: services
-journald: true        # read-only access to the host journal (HA, Supervisor, add-on logs)
+journald: true        # read-only access to the host journal (HA, Supervisor, app logs)
 map:
   - app_config:rw            # config lives in /addon_configs/<id>_alloy/
   - homeassistant_config:ro  # /homeassistant, for custom_config_path

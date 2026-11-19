@@ -29,7 +29,7 @@ configuration:
     description: >-
       Opcional. Ruta a tu propio config.alloy, p. ej.
       /homeassistant/alloy/config.alloy o /share/alloy/config.alloy. Sustituye
-      al config.alloy de la carpeta del complemento. Déjalo vacío para usar la
+      al config.alloy de la carpeta de la aplicación. Déjalo vacío para usar la
       configuración predeterminada.
 network:
   12345/tcp: Interfaz web de Alloy

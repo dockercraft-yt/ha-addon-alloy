@@ -28,7 +28,7 @@ configuration:
     description: >-
       Valgfritt. Sti til din egen config.alloy, f.eks.
       /homeassistant/alloy/config.alloy eller /share/alloy/config.alloy.
-      Erstatter config.alloy i tilleggets mappe. La stå tomt for
+      Erstatter config.alloy i appens mappe. La stå tomt for
       standardkonfigurasjonen.
 network:
   12345/tcp: Alloy-nettgrensesnitt

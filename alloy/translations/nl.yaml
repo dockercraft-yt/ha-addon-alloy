@@ -29,6 +29,6 @@ configuration:
     description: >-
       Optioneel. Pad naar je eigen config.alloy, bijv.
       /homeassistant/alloy/config.alloy of /share/alloy/config.alloy. Vervangt
-      de config.alloy in de add-on-map. Leeg laten voor de standaardconfiguratie.
+      de config.alloy in de app-map. Leeg laten voor de standaardconfiguratie.
 network:
   12345/tcp: Alloy-webinterface

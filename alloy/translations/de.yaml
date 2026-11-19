@@ -28,6 +28,6 @@ configuration:
     description: >-
       Optional. Pfad zu deiner eigenen config.alloy, z. B.
       /homeassistant/alloy/config.alloy oder /share/alloy/config.alloy. Ersetzt
-      die config.alloy im Add-on-Ordner. Leer lassen für die Standardkonfiguration.
+      die config.alloy im App-Ordner. Leer lassen für die Standardkonfiguration.
 network:
   12345/tcp: Alloy-Weboberfläche
