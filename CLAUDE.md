@@ -28,6 +28,12 @@ Achtung: Im Container ist `/config` der Add-on-Ordner, **nicht** der HA-Konfigur
 
 Map-Typ heißt `app_config`, nicht mehr das veraltete `addon_config`.
 
+## Begriffe: „App“ statt „Add-on“
+
+Home Assistant hat Add-ons mit 2026.2 in **Apps** umbenannt. Seit 0.2.0 verwenden README, DOCS, Übersetzungen und `description` in `config.yaml` „app“ bzw. „App“. Menüpfad: **Settings → Apps → Install app → ⋮ → Repositories** (DE: Einstellungen → Apps → App installieren). Neue Texte ebenso schreiben.
+
+Technische Namen bleiben: Repo `ha-addon-alloy`, Container `addon_<slug>`, Ordner `/addon_configs/`, Tool „add-on linter“. Der My-Link zum Hinzufügen des Repos heißt `supervisor_add_addon_repository` (nicht `supervisor_add_repository`, den gibt es nicht).
+
 ## Konfigurationslogik (run.sh)
 
 - `loki.write "default"` wird immer aus den Optionen erzeugt (`loki-write.generated.alloy`). Nutzer dürfen ihn nicht selbst definieren ("component already declared").
@@ -82,7 +88,13 @@ Den Ordner `test/` nicht committen.
 
 Realistischer Test auf Home Assistant: `alloy/` nach `/addons/alloy_dev/` kopieren, dort in `config.yaml` die `image:`-Zeile löschen (dann baut der Supervisor lokal) und `slug: alloy_dev` / `name: Grafana Alloy (dev)` setzen. Danach im Add-on Store unter "Lokale Add-ons" installieren. Das reguläre Add-on vorher stoppen (gleicher Port 12345, doppelte Logs).
 
+## Stand
+
+- **0.2.0 veröffentlicht (2026-11-19)** über PR #3; Images auf GHCR und Release `v0.2.0` erstellt. `main` und `Development` waren danach identisch.
+- Vorgestellt im Home-Assistant-Forum (Kategorie „Projects“). Der Entwurf liegt lokal in `FORUM_POST.md` (per `.gitignore` ausgeschlossen).
+
 ## Offene Punkte
 
-- [x] 0.2.0 auf dem Linux-Rechner geprüft (2026-11-18): ShellCheck, Add-on-Linter, Hadolint, `alloy fmt` ok; Image gebaut; `custom_config_path` leer, `/homeassistant/...`, nicht vorhandener `/config/...`-Pfad und relativer Pfad verhalten sich wie vorgesehen.
-- [x] Übersetzungen von `custom_config_path` von Claude gegengelesen (2026-11-18): pt auf brasilianisches Portugiesisch vereinheitlicht, fr/it typografisches Apostroph und HA-Begriffe („module complémentaire“, „componente aggiuntivo“). Muttersprachliche Prüfung steht weiter aus.
+- [ ] Muttersprachliche Prüfung der Übersetzungen (außer de/en), vor allem `custom_config_path` und die Begriffe für „App“ (fr „application“, it „app“, es „aplicación“, pt „aplicativo“, pl „aplikacja“, cs „aplikace“, nl/sv/nb/da „app“). Unklar, ob das die offiziellen HA-Begriffe der jeweiligen Sprache sind.
+- [ ] Deutsche Buttonbeschriftung „App installieren“ in `DOCS.de.md` in der echten HA-Oberfläche prüfen.
+- [ ] Menünamen beim lokalen Test („Add-on Store“, „Lokale Add-ons“, siehe oben) an die aktuelle HA-Oberfläche anpassen.
